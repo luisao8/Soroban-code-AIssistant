@@ -1,0 +1,11 @@
+# Ignore Python compiled files
+*.pyc
+__pycache__/
+assistant/__pycache__/
+# Ignore virtual environments
+assistants_coding_env/
+
+# Ignore environment files
+.env
+
+get_names.py
