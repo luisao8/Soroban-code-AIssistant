@@ -9,3 +9,5 @@ assistants_coding_env/
 .env
 
 get_names.py
+
+.DS_Store
