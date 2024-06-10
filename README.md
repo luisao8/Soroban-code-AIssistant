@@ -1,5 +1,8 @@
 # AI-Assisted Soroban Smart Contract Generation System
 
+![image](https://user-images.githubusercontent.com/your-username/unique-image-id.png](https://github.com/luisao8/Soroban-code-AIssistant/assets/74673031/21132e03-a200-4fc1-b922-3a426dbd957d)
+
+
 ## Introduction
 
 This project aims to build an AI-assisted system to generate Soroban smart contracts efficiently. The system accelerates smart contract creation and conceptualization, making the process more efficient for developers experienced in building Soroban smart contracts.
