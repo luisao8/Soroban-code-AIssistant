@@ -1,6 +1,6 @@
 # AI-Assisted Soroban Smart Contract Generation System
 
-![image](https://user-images.githubusercontent.com/your-username/unique-image-id.png](https://github.com/luisao8/Soroban-code-AIssistant/assets/74673031/21132e03-a200-4fc1-b922-3a426dbd957d)
+![image](https://github.com/luisao8/Soroban-code-AIssistant/assets/74673031/21132e03-a200-4fc1-b922-3a426dbd957d)
 
 
 ## Introduction
