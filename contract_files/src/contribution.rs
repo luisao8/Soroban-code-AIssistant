@@ -1,17 +1,23 @@
-```rust
-use soroban_sdk::{Address, Env};
+#![no_std]
 
-pub fn contribute(env: Env, contributor: Address, amount: i128) {
-    if amount < 100 {
-        panic!("Minimum contribution is 100 XLM");
+use soroban_sdk::{contractimpl, Address, Env};
+
+pub struct Contribution;
+
+#[contractimpl]
+impl Contribution {
+    pub fn contribute(env: Env, from: Address, amount: i128) {
+        from.require_auth();
+        if amount <= 0 {
+            panic!("Contribution amount must be greater than zero");
+        }
+        // Check-Effects-Interactions pattern
+        let total: i128 = env.storage().persistent().get(&DataKey::TotalContributions).unwrap_or(0);
+        env.storage().persistent().set(&DataKey::TotalContributions, &(total + amount));
+        // Log the contribution
+        env.storage().persistent().set(&DataKey::Contribution(from.clone()), &amount);
+        env.payments().pay(env.current_contract_address(), amount);
+        // Log event
+        env.events().publish((from, amount), "ContributionReceived");
     }
-
-    let total_contributions = env.storage().get::<i128>("total_contributions").unwrap_or(0);
-    env.storage().set("total_contributions", total_contributions + amount);
-
-    env.events().publish((contributor.clone(), amount, env.ledger().timestamp()));
-
-    let balance = env.storage().get::<i128>(&contributor).unwrap_or(0);
-    env.storage().set(&contributor, balance + amount);
 }
-```

@@ -1,12 +1,61 @@
-### Summary
+[package]
+name = "crowdfunding_campaign"
+version = "0.1.0"
+description = "Smart contract for managing a crowdfunding campaign on the Soroban platform."
+homepage = "https://github.com/your-repo/crowdfunding-campaign"
+repository = "https://github.com/your-repo/crowdfunding-campaign"
+authors = ["yourname <youremail@example.com>"]
+readme = "README.md"
+license = "MIT"
+edition = "2021"
+keywords = ["no_std", "wasm", "crowdfunding", "soroban"]
+rust-version = "1.73"
+publish = true
 
-The provided code for the Soroban smart contract modules and the test suite ensures that the crowdfunding campaign operates as intended. Each module is designed to handle specific functionalities, such as contributions, finalization, refunds, security, and integration. The test suite validates these functionalities to ensure the contract behaves correctly under various scenarios.
+[lib]
+crate-type = ["cdylib", "rlib"]
 
-### Next Steps
+[dependencies]
+soroban-sdk = { version = "0.2.0" } # Replace with the actual version
+num-integer = { version = "0.1.45", default-features = false, features = ["i128"] }
 
-1. **Integration Testing**: Deploy the contract on Stellar's testnet and perform integration testing to ensure all modules work together seamlessly.
-2. **Documentation**: Create detailed documentation and a user guide for contributors and campaign managers.
-3. **Deployment**: After successful testing, deploy the contract on the mainnet.
-4. **Monitoring and Maintenance**: Set up monitoring for the contract and plan for regular maintenance and updates based on user feedback and evolving requirements.
+[dev_dependencies]
+soroban-sdk = { version = "0.2.0", features = ["testutils"] }
 
-This comprehensive approach will ensure a secure, transparent, and efficient crowdfunding campaign on the Stellar blockchain.
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true
+
+[profile.release-with-logs]
+inherits = "release"
+debug-assertions = true
+
+[[bin]]
+name = "audit_log"
+path = "src/audit_log.rs"
+
+[[bin]]
+name = "contribution"
+path = "src/contribution.rs"
+
+[[bin]]
+name = "disbursement"
+path = "src/disbursement.rs"
+
+[[bin]]
+name = "finalization"
+path = "src/finalization.rs"
+
+[[bin]]
+name = "refund"
+path = "src/refund.rs"
+
+[[bin]]
+name = "security"
+path = "src/security.rs"

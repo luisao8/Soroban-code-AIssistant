@@ -1,44 +1,36 @@
-```rust
+#![no_std]
+
 extern crate alloc;
 
-use soroban_sdk::{contractimpl, Address, Env};
+use soroban_sdk::{contract, contractimpl, Address, Env};
 
 mod contribution;
 mod finalization;
+mod disbursement;
 mod refund;
 mod security;
-mod integration;
-mod types;
+mod data;
 
+#[contract]
 pub struct CrowdfundingContract;
 
 #[contractimpl]
 impl CrowdfundingContract {
-    pub fn contribute(env: Env, contributor: Address, amount: i128) {
-        contribution::contribute(env, contributor, amount);
+    pub fn contribute(env: Env, from: Address, amount: i128) {
+        contribution::Contribution::contribute(env, from, amount);
     }
 
-    pub fn finalize_campaign(env: Env) {
-        finalization::finalize_campaign(env);
+    pub fn finalize(env: Env, admin: Address) {
+        finalization::Finalization::finalize(env, admin);
     }
 
-    pub fn claim_refund(env: Env, contributor: Address) {
-        refund::claim_refund(env, contributor);
+    pub fn disburse(env: Env, admin: Address, recipient: Address) {
+        disbursement::Disbursement::disburse(env, admin, recipient);
     }
 
-    pub fn authorize(env: Env, address: Address) {
-        security::authorize(env, address);
-    }
-
-    pub fn transfer(env: Env, from: Address, to: Address, amount: i128) {
-        integration::transfer(env, from, to, amount);
-    }
-
-    pub fn log_event(env: Env, event: String) {
-        integration::log_event(env, event);
+    pub fn refund(env: Env, to: Address) {
+        refund::Refund::refund(env, to);
     }
 }
 
-#[cfg(test)]
-mod tests;
-```
+mod test;

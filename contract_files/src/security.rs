@@ -1,10 +1,17 @@
-```rust
+#![no_std]
+
 use soroban_sdk::{Address, Env};
 
-pub fn authorize(env: Env, address: Address) {
-    let authorized_addresses = env.storage().get::<Vec<Address>>("authorized_addresses").unwrap();
-    if !authorized_addresses.contains(&address) {
-        panic!("Unauthorized access");
+pub struct Security;
+
+impl Security {
+    pub fn require_admin(env: &Env, admin: Address) {
+        admin.require_auth();
+    }
+
+    pub fn validate_contribution(amount: i128) {
+        if amount <= 0 {
+            panic!("Invalid contribution amount");
+        }
     }
 }
-```

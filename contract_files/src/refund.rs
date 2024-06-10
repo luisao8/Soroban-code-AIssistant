@@ -1,21 +1,25 @@
-```rust
-use soroban_sdk::{Address, Env};
-use crate::integration::token;
+#![no_std]
 
-pub fn claim_refund(env: Env, contributor: Address) {
-    let campaign_status = env.storage().get::<String>("campaign_status").unwrap();
-    if campaign_status != "unsuccessful" {
-        panic!("Refunds are not available");
+use soroban_sdk::{contractimpl, Address, Env};
+
+pub struct Refund;
+
+#[contractimpl]
+impl Refund {
+    pub fn refund(env: Env, to: Address) {
+        to.require_auth();
+        let status: Status = env.storage().persistent().get(&DataKey::Status).unwrap();
+        if status != Status::Unsuccessful {
+            panic!("Campaign not unsuccessful");
+        }
+        let amount: i128 = env.storage().persistent().get(&DataKey::Contribution(to.clone())).unwrap_or(0);
+        if amount > 0 {
+            env.payments().pay(to.clone(), amount);
+            env.storage().persistent().remove(&DataKey::Contribution(to));
+            // Log event
+            env.events().publish((to, amount), "RefundProcessed");
+        } else {
+            panic!("No contribution found for refund");
+        }
     }
-
-    let refund_status = env.storage().get::<bool>(&contributor).unwrap_or(false);
-    if refund_status {
-        panic!("Refund already claimed");
-    }
-
-    let balance = env.storage().get::<i128>(&contributor).unwrap_or(0);
-    token::Client::new(&env, &token::TOKEN_ADDRESS).transfer(&env.current_contract_address(), &contributor, &balance);
-
-    env.storage().set(&contributor, true);
 }
-```
